@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MovieCard from "./components/MovieCard";
 
 const url =
-  "https://api.themoviedb.org/3/discover/movie?api_key=04c35731a5ee918f014970082a0088b1&language=tr-TR";
+  "https://api.themoviedb.org/3/discover/movie?api_key=___APP_KEY___&language=tr-TR";
 
 function App() {
   const [movieList, setMovieList] = useState([]);
