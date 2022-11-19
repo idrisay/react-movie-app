@@ -23,9 +23,9 @@ const MovieCard = ({ movie }) => {
       style={{
         backgroundSize: "cover",
         backgroundImage:
-          "url(" + `https://image.tmdb.org/t/p/w500/${poster_path}` + ")",
+          `url(https://image.tmdb.org/t/p/w500/${poster_path})` ,
       }}
-      className="transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 flex flex-col justify-between m-1 p-4 border-[1px] border-blue-200 rounded-md w-96 bg-gray-100 h-[400px] text-white"
+      className="transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 flex flex-col justify-between m-2.5 p-4 border-[1px] border-blue-200 rounded-md w-96 bg-gray-100 h-[400px] text-white"
     >
       <div className="flex justify-between">
         <p className="bg-black bg-opacity-30 p-1 rounded-md">

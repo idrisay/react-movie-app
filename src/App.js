@@ -1,53 +1,66 @@
 import { useEffect, useState } from "react";
+import Controllers from "./components/Controllers";
 import MovieCard from "./components/MovieCard";
+import Navbar from "./components/Navbar";
 
-const url =
-  "https://api.themoviedb.org/3/discover/movie?api_key=___APP_KEY___&language=tr-TR";
 
 function App() {
   const [movieList, setMovieList] = useState([]);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [page, setPage] = useState(1);
+
+  const url =
+    "https://api.themoviedb.org/3/discover/movie?api_key=APP_KEY&language=tr-TR";
 
   useEffect(() => {
-    fetch(url)
+    getMovies(url);
+  }, [page]);
+
+  const getMovies = (fetchUrl) => {
+    fetch(`${fetchUrl}&page=${page}`)
       .then((response) => response.json())
       .then((json) => {
-        console.log(json.results)
-        setMovieList(json.results)});
-  }, []);
+        console.log(json);
+        setMovieList(json.results);
+      });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (event.target[0].value) {
+      getMovies(
+        `https://api.themoviedb.org/3/search/movie?query=${event.target[0].value}&api_key=APPKEY&language=tr-TR`
+      );
+      setSearchKeyword("");
+    } else {
+      getMovies(url);
+    }
+    setPage(1)
+  };
+  const handlePage = (type) => {
+    console.log("handlePage", type);
+    if(type === 'decrease'){
+      setPage(page - 1)
+    }else{
+      setPage(page + 1)
+    }
+  };
 
   return (
     <div className="bg-gray-300">
-      <p className="text-center p-2 text-4xl">Isabella Movies</p>
-      <div>
-        {/* {movieList.map((item) => (
-          <div
-            key={item.id}
-            className={
-              item.completed ? "line-through text-red-400" : "text-green-400"
-            }
-          >
-            <p>
-              <span>{item.id}</span>. <span>{item.title}</span>
-            </p>
-          </div>
-        ))} */}
+      <Navbar
+        setSearchKeyword={setSearchKeyword}
+        searchKeyword={searchKeyword}
+        handleSubmit={handleSubmit}
+      />
+      <div className="flex justify-center flex-wrap max-w-7xl mx-auto pt-20">
+        {movieList.map((item) => (
+          <MovieCard key={item.id} movie={item} />
+        ))}
       </div>
-      <div className="flex justify-center flex-wrap max-w-7xl mx-auto">
-        {
-          movieList.map((item) => {
-            return (
-              <MovieCard key={item.id} movie={item}/>
-            )
-          })
-        }
-        {/* <MovieCard /> 
-        <MovieCard />
-        <MovieCard /> */}
-      </div>
+      <Controllers handlePage={handlePage} />
     </div>
   );
 }
 
 export default App;
-
-// https://image.tmdb.org/t/p/w500/pFlaoHTZeyNkG83vxsAJiGzfSsa.jpg
