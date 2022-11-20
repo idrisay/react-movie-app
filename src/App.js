@@ -8,19 +8,22 @@ function App() {
   const [movieList, setMovieList] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1)
 
   const url =
-    "https://api.themoviedb.org/3/discover/movie?api_key=APP_KEY&language=tr-TR";
+    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_API_KEY}&language=tr-TR`;
 
   useEffect(() => {
-    getMovies(url);
+    let pg = page;
+    getMovies(url, pg);
   }, [page]);
 
-  const getMovies = (fetchUrl) => {
-    fetch(`${fetchUrl}&page=${page}`)
+  const getMovies = (fetchUrl, pg) => {
+    fetch(`${fetchUrl}&page=${pg}`)
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
+        setTotalPage(json.total_pages)
         setMovieList(json.results);
       });
   };
@@ -29,11 +32,12 @@ function App() {
     event.preventDefault();
     if (event.target[0].value) {
       getMovies(
-        `https://api.themoviedb.org/3/search/movie?query=${event.target[0].value}&api_key=APPKEY&language=tr-TR`
+        `https://api.themoviedb.org/3/search/movie?query=${event.target[0].value}&api_key=${process.env.REACT_APP_API_KEY}&language=tr-TR`,
+        1
       );
       setSearchKeyword("");
     } else {
-      getMovies(url);
+      getMovies(url, 1);
     }
     setPage(1)
   };
@@ -58,7 +62,7 @@ function App() {
           <MovieCard key={item.id} movie={item} />
         ))}
       </div>
-      <Controllers handlePage={handlePage} />
+      <Controllers page={page} totalPage={totalPage} handlePage={handlePage} />
     </div>
   );
 }
